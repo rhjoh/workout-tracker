@@ -1,0 +1,4 @@
+# Node deps
+backend/node_modules/
+react-frontend/node_nodules
+.DS_Store
