@@ -1,4 +1,5 @@
 const writeWorkout = require("./methods/newWorkout");
+const getExerciseList = require("./methods/getExercises");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -15,15 +16,10 @@ app.post("/submitworkout", (req, res) => {
   writeWorkout.writeWorkout();
 });
 
-app.get("/getExerciseList", (req, res) => {
-  const exerciseList = [
-    { id: 0, name: "Bench Press" },
-    { id: 1, name: "Dumbbell Curl" },
-    { id: 2, name: "Barbell Squat" },
-  ];
-  // This needs to be a method
+app.get("/getExerciseList", async (req, res) => {
+  const exerciseResults = await getExerciseList.getExercises();
 
-  res.json(exerciseList);
+  res.json(exerciseResults);
 });
 
 app.listen(8000);
