@@ -5,12 +5,15 @@ const Exercise = ({ exerciseIndex, exercise, updateExercise }) => {
     const { name, value } = e.target;
     const updatedSets = [...exercise.setData];
 
+    const todaysDate = new Date().toISOString().slice(0, 10);
+
     updatedSets[index] = {
       ...updatedSets[index], // We are setting updatedSets[index] to updatedSets[index], copying it.
       [name]: value, // here we update it, [name] coule be reps, or weight, depending on the event target ()
     };
     updateExercise(exerciseIndex, {
       exerciseID: exercise.exerciseID,
+      exerciseDate: todaysDate,
       setData: updatedSets,
     });
   };

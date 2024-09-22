@@ -5,9 +5,6 @@ const NewWorkout = ({ exerciseList }) => {
   const [selectedExercise, setSelectedExercise] = useState({});
   const [workoutData, setWorkoutData] = useState([]);
 
-  const todaysDate = new Date().toISOString().slice(0, 10);
-  console.log(todaysDate);
-
   const handleExerciseChange = (event) => {
     const selectedExerciseID = event.target.selectedOptions[0].dataset.id;
     const selectedExerciseName = event.target.selectedOptions[0].label;
@@ -16,7 +13,6 @@ const NewWorkout = ({ exerciseList }) => {
 
   const addExercise = () => {
     console.log("Selected: ", selectedExercise.id);
-    console.log(workoutData);
     const newExercise = {
       exerciseID: selectedExercise.id,
       exerciseName: selectedExercise.name, // Only used for the label in the Exercise component, lingers in the final POSTed data
@@ -30,12 +26,12 @@ const NewWorkout = ({ exerciseList }) => {
     setWorkoutData((prevWorkoutData) => {
       const updatedWorkoutData = [...prevWorkoutData];
       updatedWorkoutData[index] = updatedExerciseData;
-      console.log("Updated:", updatedWorkoutData); // State is still 1 step behind.
       return updatedWorkoutData; // Explicit return required here
     });
   };
 
   const submitWorkout = () => {
+    console.log(workoutData);
     fetch("http://localhost:8000/submitworkout", {
       method: "POST",
       headers: {
@@ -55,10 +51,6 @@ const NewWorkout = ({ exerciseList }) => {
       });
   };
 
-  useEffect(() => {
-    console.log(workoutData);
-  }, [workoutData]);
-
   return (
     <div>
       <h2>New Workout</h2>
@@ -68,9 +60,12 @@ const NewWorkout = ({ exerciseList }) => {
         id="exercise-name-select"
         onChange={handleExerciseChange}
       >
+        <option disabled selected hidden>
+          Choose Exercise...
+        </option>
         {exerciseList.length > 0
           ? exerciseList.map((item, index) => (
-              <option key={index} data-id={item.id} value={item.id}>
+              <option key={index} data-id={item._id}>
                 {item.name}
               </option>
             ))
