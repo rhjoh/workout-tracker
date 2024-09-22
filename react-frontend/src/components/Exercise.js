@@ -10,7 +10,7 @@ const Exercise = ({ exerciseIndex, exercise, updateExercise }) => {
       [name]: value, // here we update it, [name] coule be reps, or weight, depending on the event target ()
     };
     updateExercise(exerciseIndex, {
-      exerciseName: exercise.exerciseName,
+      exerciseID: exercise.exerciseID,
       setData: updatedSets,
     });
   };

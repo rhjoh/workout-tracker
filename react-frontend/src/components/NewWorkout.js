@@ -1,23 +1,27 @@
 import Exercise from "./Exercise";
 import React, { useEffect, useState } from "react";
 
-const NewWorkout = () => {
-  const [newExerciseName, setExerciseName] = useState("benchpress");
+const NewWorkout = ({ exerciseList }) => {
+  const [selectedExercise, setSelectedExercise] = useState({});
   const [workoutData, setWorkoutData] = useState([]);
 
   const todaysDate = new Date().toISOString().slice(0, 10);
   console.log(todaysDate);
 
   const handleExerciseChange = (event) => {
-    setExerciseName(event.target.value);
+    const selectedExerciseID = event.target.selectedOptions[0].dataset.id;
+    const selectedExerciseName = event.target.selectedOptions[0].label;
+    setSelectedExercise({ id: selectedExerciseID, name: selectedExerciseName });
   };
 
   const addExercise = () => {
+    console.log("Selected: ", selectedExercise.id);
+    console.log(workoutData);
     const newExercise = {
-      exerciseName: newExerciseName,
+      exerciseID: selectedExercise.id,
+      exerciseName: selectedExercise.name, // Only used for the label in the Exercise component, lingers in the final POSTed data
       setData: Array(3).fill({ reps: 0, weight: 0 }),
     };
-
     setWorkoutData((prevWorkoutData) => [...prevWorkoutData, newExercise]);
   };
 
@@ -32,7 +36,7 @@ const NewWorkout = () => {
   };
 
   const submitWorkout = () => {
-    fetch("http://localhost:8000/test", {
+    fetch("http://localhost:8000/submitworkout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,11 +45,11 @@ const NewWorkout = () => {
     })
       .then((response) => {
         console.log(response.status);
-        return response.json();
+        return response; // use response.json() if expecting a JSON payload in response
       })
-      .then((data) => {
+      /*       .then((data) => {
         console.log(data);
-      })
+      }) */
       .catch((error) => {
         console.log(error);
       });
@@ -60,13 +64,17 @@ const NewWorkout = () => {
       <h2>New Workout</h2>
 
       <select
-        name="newExerciseName"
+        name="newExerciseSelect"
         id="exercise-name-select"
         onChange={handleExerciseChange}
       >
-        <option value="benchpress">Bench Press</option>
-        <option value="dumbbell-curl">Dumbbell Curl</option>
-        <option value="barbell-squat">Barbell Squat</option>
+        {exerciseList.length > 0
+          ? exerciseList.map((item, index) => (
+              <option key={index} data-id={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))
+          : null}
       </select>
       <button onClick={addExercise}>Add Exercise</button>
       {workoutData.map((item, index) => (
