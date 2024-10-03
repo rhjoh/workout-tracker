@@ -7,13 +7,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post("/submitworkout", (req, res) => {
+app.post("/submitworkout", async (req, res) => {
   console.log("Got data on /submitworkout");
   const requestBody = req.body;
-  /*   console.log(requestBody[0].setData); */
-  console.log(requestBody[0]);
-  res.status(200).end();
-  writeWorkout.writeWorkout();
+  try {
+    await writeWorkout.writeWorkout(requestBody);
+    res.status(200).end();
+  } catch (e) {
+    console.error(e);
+    res.status(500).end();
+  }
 });
 
 app.get("/getExerciseList", async (req, res) => {

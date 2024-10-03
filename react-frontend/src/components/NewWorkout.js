@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 const NewWorkout = ({ exerciseList }) => {
   const [selectedExercise, setSelectedExercise] = useState({});
   const [workoutData, setWorkoutData] = useState([]);
+  const [postResponseOk, setPostResponseOk] = useState();
 
   const handleExerciseChange = (event) => {
     const selectedExerciseID = event.target.selectedOptions[0].dataset.id;
@@ -41,6 +42,11 @@ const NewWorkout = ({ exerciseList }) => {
     })
       .then((response) => {
         console.log(response.status);
+        if (response.status === 200) {
+          setPostResponseOk(1);
+        } else {
+          setPostResponseOk(0);
+        }
         return response; // use response.json() if expecting a JSON payload in response
       })
       /*       .then((data) => {
@@ -82,9 +88,16 @@ const NewWorkout = ({ exerciseList }) => {
         />
       ))}
       <br />
-      {workoutData.length > 0 ? (
-        <button onClick={submitWorkout}>Finish Workout</button>
-      ) : null}
+      <div>
+        {workoutData.length > 0 ? (
+          <button onClick={submitWorkout}>Finish Workout</button>
+        ) : null}
+        {postResponseOk === 1 ? (
+          <p>Workout saved</p>
+        ) : (
+          <p>Workout save failed</p>
+        )}
+      </div>
     </div>
   );
 };

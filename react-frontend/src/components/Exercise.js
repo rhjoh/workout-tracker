@@ -18,6 +18,27 @@ const Exercise = ({ exerciseIndex, exercise, updateExercise }) => {
     });
   };
 
+  const addSetButton = () => {
+    const updatedSets = [...exercise.setData, { reps: 0, weight: 0 }];
+    updateExercise(exerciseIndex, {
+      ...exercise,
+      setData: updatedSets,
+    });
+  };
+
+  const subSetButton = () => {
+    const updatedSets = [...exercise.setData];
+    updatedSets.splice(-1);
+    updateExercise(exerciseIndex, {
+      ...exercise,
+      setData: updatedSets,
+    });
+  };
+
+  const printData = () => {
+    console.log(exercise);
+  };
+
   return (
     <div>
       <form>
@@ -44,6 +65,13 @@ const Exercise = ({ exerciseIndex, exercise, updateExercise }) => {
           </div>
         ))}
       </form>
+      <button onClick={printData}>Test</button>
+      <button id="addSetButton" onClick={addSetButton}>
+        Add set
+      </button>
+      <button id="subSetButton" onClick={subSetButton}>
+        Subtract set
+      </button>
     </div>
   );
 };
